@@ -1,22 +1,28 @@
-export default function initTabNav() {
-  const tabMenu = document.querySelectorAll('[data-tab="menu"] li');
-  const tabContent = document.querySelectorAll('[data-tab="content"] section');
+export default class initTabNav {
+  constructor(menu, content) {
+    this.tabMenu = document.querySelectorAll(menu);
+    this.tabContent = document.querySelectorAll(content);
+  }
 
-  if (tabMenu.length && tabContent.length) {
-    // se o length for 0, sera false, então não ira executar o código!
-    // 0 sempre sera false, qualquer numero diferente dele é true
-    tabContent[0].classList.add(tabContent[0].dataset.anime);
+  activeTab(index) {
+    this.tabContent.forEach((content) => {
+      content.classList.remove(content.dataset.anime);
+    });
+    this.tabContent[index].classList.add(this.tabContent[index].dataset.anime);
+  }
 
-    function activeTab(index) {
-      tabContent.forEach((content) => {
-        content.classList.remove(content.dataset.anime);
-      });
-      tabContent[index].classList.add(tabContent[index].dataset.anime);
-    }
-
-    tabMenu.forEach((item, index) => {
-      item.addEventListener("click", () => activeTab(index));
+  addTabNavEvent() {
+    this.tabMenu.forEach((item, index) => {
+      item.addEventListener("click", () => this.activeTab(index));
     });
   }
+
+  init() {
+    if (this.tabMenu.length && this.tabContent.length) {
+      // se o length for 0, sera false, então não ira executar o código!
+      // 0 sempre sera false, qualquer numero diferente dele é true
+      this.activeTab(0) // ativa o primeiro item da lista
+      this.addTabNavEvent()
+    }
+  }
 }
-// isolando a função, e chamando ela logo após, assim evita dar erro se for declaro uma variavel com o mesmo tipo ou coisa parecida
