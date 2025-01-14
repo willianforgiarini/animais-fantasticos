@@ -1,5 +1,5 @@
 // importação da funcao no arquivo scroll-suave.js
-import initScrollSuave from "./modules/scroll-suave.js";
+import ScrollSuave from "./modules/scroll-suave.js";
 import initAnimacaoScroll from "./modules/scroll-animacao.js";
 import initAccordion from "./modules/accordion.js";
 import initTabNav from "./modules/tab-nav.js";
@@ -15,7 +15,9 @@ import initFetchBitcoin from "./modules/fetch.bitcoin.js";
 // o ideal é exportar somente uma coisa, para o modulo seja especifico em fazer somente uma coisa
 // as funções dos arquivos são carregadas em forma assincrona, porém são executadas na ordem que foi colocada
 
-initScrollSuave();
+const scrollSuave = new ScrollSuave('[data-menu="suave"] a[href^="#"]');
+scrollSuave.init()
+
 initAnimacaoScroll();
 initAccordion();
 initTabNav();
