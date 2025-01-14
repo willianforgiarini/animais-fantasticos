@@ -1,22 +1,33 @@
-export default function initModal() {
-  const botaoAbrir = document.querySelector('[data-modal="abrir"]');
-  const botaoFechar = document.querySelector('[data-modal="fechar"]');
-  const modal = document.querySelector('[data-modal="container"]');
+export default class Modal {
+  constructor(abrir, fechar, modal) {
+    this.botaoAbrir = document.querySelector(abrir);
+    this.botaoFechar = document.querySelector(fechar);
+    this.modal = document.querySelector(modal);
+    this.toggleLogin = this.toggleLogin.bind(this)
+    this.clickOutsideModal = this.clickOutsideModal.bind(this)
+  }
 
-  if (botaoAbrir && botaoFechar && modal) {
-    function toggleLogin(event) {
-      event.preventDefault();
-      modal.classList.toggle("ativo");
+  toggleLogin(event) {
+    event.preventDefault();
+    this.modal.classList.toggle("ativo");
+  }
+
+  clickOutsideModal(event) {
+    if (event.target === this.modal) {
+      this.toggleLogin(event);
     }
+  }
 
-    function clickOutsideModal(event) {
-      if (event.target === this) {
-        toggleLogin(event);
-      }
+  addModalEvent() {
+    this.botaoAbrir.addEventListener("click", this.toggleLogin);
+    // com toggleLogin.bind(this) - a função sempre ira fazer referencia ao objeto Modal, sem o bind, a função ira referenciar o this.botaoAbrir, que é um elemento HTML, e o código não funcionara
+    this.botaoFechar.addEventListener("click", this.toggleLogin);
+    this.modal.addEventListener("click", this.clickOutsideModal);
+  }
+
+  init() {
+    if (this.botaoAbrir && this.botaoFechar && this.modal) {
+      this.addModalEvent();
     }
-
-    botaoAbrir.addEventListener("click", toggleLogin);
-    botaoFechar.addEventListener("click", toggleLogin);
-    modal.addEventListener("click", clickOutsideModal);
   }
 }
