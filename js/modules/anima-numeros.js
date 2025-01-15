@@ -1,12 +1,18 @@
-export default function initAnimaNumeros() {}
+export default class AnimaNumeros {
+  constructor(numeros, observeTarget, observeClass) {
+    this.numeros = document.querySelectorAll(numeros);
+    this.observeClass = observeClass
+    this.observerTarget = document.querySelector(observeTarget); // elemento que vou usar para ser observado
+    this.handleMutation = this.handleMutation.bind(this);
+  }
 
-function animaNumeros() {
-  const numeros = document.querySelectorAll("[data-numero]");
-
-  numeros.forEach((numero) => {
+  // função que não precisa do objeto para funcionar
+  // pode ser declarada com (static nomeFunction)
+  // a função ira fazer parte da classe AnimaNumeros e não do objeto criado a partir da classe
+  static incrementaNumero(numero) {
     const total = +numero.innerText;
     const incremento = total / 100;
-
+  
     let start = 0;
     const timer = setInterval(() => {
       start += incremento;
@@ -16,17 +22,32 @@ function animaNumeros() {
         clearInterval(timer);
       }
     }, 25 * Math.random());
-  });
-}
-
-function handleMutation(mutation) {
-  if (mutation[0].target.classList.contains("ativo")) {
-    observer.disconnect();
-    animaNumeros();
   }
+
+  animaNumeros() {
+    this.numeros.forEach((numero) => this.constructor.incrementaNumero(numero)); // usar constructor para chamar uma função static
+  }
+  
+  // função que ocorre quando a mutação ocorre
+  handleMutation(mutation) {
+    if (mutation[0].target.classList.contains(this.observeClass)) {
+      this.observer.disconnect();
+      this.animaNumeros();
+    }
+  }
+  
+  // adiciona o MutationObserver para verificar 
+  // quando a classe ativo é adicionada ao element target
+  addMutationObserver() {
+    this.observer = new MutationObserver(this.handleMutation); // objeto que contem o observador
+    this.observer.observe(this.observerTarget, { attributes: true });
+  }
+
+  init() {
+    if (this.numeros.length && this.observerTarget) {
+      this.addMutationObserver()
+    }
+    return this;
+  }
+
 }
-
-const observerTarget = document.querySelector(".numeros"); // elemento que vou usar para ser observado
-const observer = new MutationObserver(handleMutation); // objeto que contem o observador
-
-observer.observe(observerTarget, { attributes: true });
