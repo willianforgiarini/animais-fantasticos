@@ -1,27 +1,44 @@
-export default function initFuncionamento() {
-  const funcionamento = document.querySelector("[data-semana]");
-  const horarioSemana = funcionamento.dataset.horario.split(",").map(Number);
-  const diasSemana = funcionamento.dataset.semana.split(",").map(Number); // map(Number) ja retorno os itens da Array convertido para numeros
-  // map para interagir com cada item da Array criada no split e retorna uma nova Array
-
-  const diasSemana2 = funcionamento.dataset.semana
-    .split(",")
-    .map((num) => +num); // dentro do elemento, a uma propriedade dataset, que possui propriedades com a chave do dataset e o seu valor
-
-  const dataAgora = new Date();
-  const diaAgora = dataAgora.getDay();
-  const horarioAgora = dataAgora.getHours();
-
-  const semanaAberto = diasSemana.includes(diaAgora);
-  const horarioAberto =
-    horarioAgora >= horarioSemana[0] && horarioAgora < horarioSemana[1];
-
-  if (semanaAberto && horarioAberto) {
-    funcionamento.classList.add("aberto");
+export default class Funcionamento {
+  constructor(funcionamento) {
+    this.funcionamento = document.querySelector(funcionamento);
+  }
+  
+  dadosFuncionamento() {
+    this.horarioSemana = this.funcionamento.dataset.horario.split(",").map(Number);
+    this.diasSemana = this.funcionamento.dataset.semana.split(",").map(Number); // map(Number) ja retorna os itens da Array convertido para numeros
+    // map para interagir com cada item da Array criada no split e retorna uma nova Array
+  }
+  
+  dadosAgora() {
+    this.dataAgora = new Date();
+    this.diaAgora = this.dataAgora.getDay();
+    this.horarioAgora = this.dataAgora.getUTCHours() - 3;
+  }
+  
+  estaAberto() {
+    const semanaAberto = this.diasSemana.includes(this.diaAgora);
+    const horarioAberto = this.horarioAgora >= this.horarioSemana[0] && this.horarioAgora < this.horarioSemana[1];
+    
+    return semanaAberto && horarioAberto
+  }
+  
+  ativaAberto() {
+    if (this.estaAberto()) {
+      this.funcionamento.classList.add("aberto");
+    }
+  }
+  
+  init() {
+    if (this.funcionamento) {
+      this.dadosFuncionamento();
+      this.dadosAgora();
+      this.ativaAberto();
+    }
+    return this;
   }
 }
 
-// console.log(diasSemana.find(dia => dia === diaAgora)); // me retorno o elemento que for igual ao que foi passado;
+// console.log(diasSemana.find(dia => dia === diaAgora)); // me retorna o elemento que for igual ao que foi passado;
 // console.log(diasSemana.indexOf(diaAgora)); // me retorna o index do elemento que for igual ao q foi passado
 // console.log(diasSemana.includes(diaAgora)); // retorna true ou false veriricando se o elemento está presente no array
 
