@@ -192,14 +192,7 @@ body {
 }
 
 [data-semana].aberto::after {
-  display: inline-block;
-  content: "";
-  width: 6px;
-  height: 6px;
   background: #3f4;
-  border-radius: 50%;
-  margin-left: 4px;
-  border: 2px solid black;
 }
 
 .copy {

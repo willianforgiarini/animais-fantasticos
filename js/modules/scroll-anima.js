@@ -1,21 +1,23 @@
+import debounce from "./debounce.js";
+
 export default class ScrollAnima {
   constructor(sections) {
     this.sections = document.querySelectorAll(sections);
     this.windowMetade = window.innerHeight * 0.6;
+    
     this.checkDistance = this.checkDistance.bind(this);
   }
 
   // pega a distância de cada item em relação
   // ao topo do site
   getDistance() {
-    this.distance = [...this.sections].map(section => {
+    this.distance = [...this.sections].map(section => { // NodeList não possui o método .map, [...] transforma em Array
       const offset = section.offsetTop;
       return {
         element: section,
         offset: Math.floor(offset) - this.windowMetade,
       };
     });
-    console.log(this.distance);
   }
 
   // vetifica a distância em cada objeto
